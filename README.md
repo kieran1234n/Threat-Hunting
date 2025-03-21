@@ -1,5 +1,5 @@
 Threat Hunt Report (Unauthorized TOR Usage)
-Detection of Unauthorized TOR Browser Installation and Use on Workstation: _______________
+Detection of Unauthorized TOR Browser Installation and Use on Workstation: Kieran VM
 Example Scenario:
 Management suspects that some employees may be using TOR browsers to bypass network security controls because recent network logs show unusual encrypted traffic patterns and connections to known TOR entry nodes. Additionally, there have been anonymous reports of employees discussing ways to access restricted sites during work hours. The goal is to detect any TOR usage and analyze related security incidents to mitigate potential risks. If any use of TOR is found, notify management.
 
@@ -11,26 +11,22 @@ Check DeviceNetworkEvents for any signs of outgoing connections over known TOR p
 Steps Taken
 The initial search showed that the account “lab user” had appeared to have downloaded a tor installer and created a file called “tor shopping list.txt” on the desktop. The malicious events began at exactly 13:30 GMT on the 20th March 2025.
 Query used to locate events:
-image
-4. Searched the DeviceNetworkEvents Table for TOR Network Connections
 
-Searched for any indication the TOR browser was used to establish a connection using any of the known TOR ports. At 2024-11-08T22:18:01.1246358Z, an employee on the "threat-hunt-lab" device successfully established a connection to the remote IP address 176.198.159.33 on port 9001. The connection was initiated by the process tor.exe, located in the folder c:\users\employee\desktop\tor browser\browser\torbrowser\tor\tor.exe. There were a couple of other connections to sites over port 443.
+[Initial Query] (InitialQuery)
 
 Query used
 
-DeviceNetworkEvents  
-| where DeviceName == "threat-hunt-lab"  
-| where InitiatingProcessAccountName != "system"  
-| where InitiatingProcessFileName in ("tor.exe", "firefox.exe")  
-| where RemotePort in ("9001", "9030", "9040", "9050", "9051", "9150", "80", "443")  
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath  
-| order by Timestamp desc
-image
+DeviceFileEvents
+| where DeviceName == "kieranvm"
+| where InitiatingProcessAccountName == "lab user"
+| where FileName contains "tor"
+| order by Timestamp desc 
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName
 
 ___
 
 
-Next I searched the DeviceProcessEvents table for any ProcessCommandLine that contained the string “tor-browser-windows-x86_64-portable-14.0.1.exe”. What i found was that on 20 Mar 2025 at 13:35:04 the account “lab user” ran this command combined with “/S” to silently trigger a silent installation of Tor.
+Next I searched the DeviceProcessEvents table for any ProcessCommandLine that contained the string “tor-browser-windows-x86_64-portable-14.0.1.exe”. What i found was that on 20 Mar 2025 at 13:35:04 the account “lab user” ran a command in powershell that included the above text folowed by “/S” to trigger a silent installation of Tor.
 
 Query used 
 
