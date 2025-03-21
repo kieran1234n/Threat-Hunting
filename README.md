@@ -12,15 +12,16 @@ Steps Taken
 The initial search showed that the account “lab user” had appeared to have downloaded a tor installer and created a file called “tor shopping list.txt” on the desktop. The malicious events began at exactly 13:30 GMT on the 20th March 2025.
 Query used to locate events:
 
-![Initial Query](InitialQuery)
+![](InitialQuery.png)
 
 Query used
 
-DeviceFileEvents
-| where DeviceName == "kieranvm"
-| where InitiatingProcessAccountName == "lab user"
-| where FileName contains "tor"
-| order by Timestamp desc 
+DeviceFileEvents  
+| where DeviceName == "threat-hunt-lab"  
+| where InitiatingProcessAccountName == "employee"  
+| where FileName contains "tor"  
+| where Timestamp >= datetime(2024-11-08T22:14:48.6065231Z)  
+| order by Timestamp desc  
 | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName
 
 ___
@@ -35,7 +36,7 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "tor-browser-windows-x86_64-portable-14.0.7.exe"
 | project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
 
-![Query Reseults](Query2}
+![Query Reseults](Query2.png)
 ___
 
 
@@ -50,7 +51,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
 | order by Timestamp desc 
 
-![Query Reseults](Query3)
+![Query Reseults](Query3.png)
 ___
 
 
@@ -64,7 +65,7 @@ DeviceNetworkEvents
 | where RemotePort in ("9001", "9030", "9040", "9050", "9051", "9150")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, RemoteIP, RemotePort, RemoteUrl
 
-![Query Reseults](Query4}
+![Query Reseults](Query4.png)
 
 
 Chronological Event Timeline
