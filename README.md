@@ -3,13 +3,18 @@
 [Scenario Creation](Scenario-Creation.md)
 
 Detection of Unauthorized TOR Browser Installation and Use on Workstation: Kieran VM
+
 Example Scenario:
+
 Management suspects that some employees may be using TOR browsers to bypass network security controls because recent network logs show unusual encrypted traffic patterns and connections to known TOR entry nodes. Additionally, there have been anonymous reports of employees discussing ways to access restricted sites during work hours. The goal is to detect any TOR usage and analyze related security incidents to mitigate potential risks. If any use of TOR is found, notify management.
 
 
 High-Level TOR related IoC Discovery Plan:
+
 Check DeviceFileEvents for any tor(.exe) or firefox(.exe) file events
+
 Check DeviceProcessEvents for any signs of installation or usage
+
 Check DeviceNetworkEvents for any signs of outgoing connections over known TOR ports
 
 Steps Taken
