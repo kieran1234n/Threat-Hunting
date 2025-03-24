@@ -1,6 +1,6 @@
 ## Threat Hunt Report (Unauthorized TOR Usage)
 
-[Scenario Creation](Threat-Hunting-Scenario.md)
+[Scenario Creation](Scenario-Creation.md)
 
 Detection of Unauthorized TOR Browser Installation and Use on Workstation: Kieran VM
 Example Scenario:
